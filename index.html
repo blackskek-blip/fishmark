@@ -184,10 +184,14 @@ body{font-family:"Noto Sans KR",sans-serif;background:#d6eaf8;color:var(--text);
 <!-- ── Step 1: 지역 ── -->
 <div class="screen hidden ob-screen" id="s-region">
   <div class="ob-header">
-    <div class="ob-step-row">
-      <div class="ob-step active"></div>
-      <div class="ob-step"></div>
-      <div class="ob-step"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="width:34px"></div>
+      <div class="ob-step-row" style="margin:0">
+        <div class="ob-step active"></div>
+        <div class="ob-step"></div>
+        <div class="ob-step"></div>
+      </div>
+      <button onclick="goHome()" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">🏠</button>
     </div>
     <div class="ob-q">어디에서 낚시하실 건가요?</div>
     <div class="ob-hint">가장 가까운 바다 방향을 선택해요</div>
@@ -216,10 +220,14 @@ body{font-family:"Noto Sans KR",sans-serif;background:#d6eaf8;color:var(--text);
 <!-- ── Step 2: 낚시 장소 유형 ── -->
 <div class="screen hidden ob-screen" id="s-spot">
   <div class="ob-header">
-    <div class="ob-step-row">
-      <div class="ob-step done"></div>
-      <div class="ob-step active"></div>
-      <div class="ob-step"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <button onclick="back('s-region')" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">←</button>
+      <div class="ob-step-row" style="margin:0">
+        <div class="ob-step done"></div>
+        <div class="ob-step active"></div>
+        <div class="ob-step"></div>
+      </div>
+      <button onclick="goHome()" style="background:rgba(255,255,255,.2);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">🏠</button>
     </div>
     <div class="ob-q">어디서 낚시할 예정인가요?</div>
     <div class="ob-hint">장소마다 잡히는 물고기가 달라요</div>
@@ -262,6 +270,17 @@ body{font-family:"Noto Sans KR",sans-serif;background:#d6eaf8;color:var(--text);
       <button onclick="goHome()" style="background:rgba(255,255,255,.15);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center" title="처음으로">🏠</button>
     </div>
     <div class="conditions-bar" id="cond-bar"></div>
+    <!-- 탭: 지금 가능 / 전체 보기 -->
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button id="tab-now" onclick="setFishTab('now')"
+        style="flex:1;padding:8px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;background:white;color:#2e86c1;transition:all .15s">
+        🎣 지금 잡을 수 있어요
+      </button>
+      <button id="tab-all" onclick="setFishTab('all')"
+        style="flex:1;padding:8px;border-radius:10px;border:2px solid rgba(255,255,255,.3);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.75);transition:all .15s">
+        📅 전체 어종 보기
+      </button>
+    </div>
   </div>
   <div class="fish-grid" id="fish-grid"></div>
 </div>
@@ -465,6 +484,24 @@ const FISH = {
     simBait: `<svg width="44" height="14" viewBox="0 0 48 16"><path d="M2 8 Q16 2,34 8 Q40 4,42 8 Q40 12,34 8 Q16 14,2 8Z" fill="#7c3aed" opacity=".85"/><circle cx="6" cy="7" r="2" fill="white"/><circle cx="6" cy="7" r="1" fill="#1e293b"/><path d="M42 8 L48 3 L48 13Z" fill="#5b21b6"/></svg>`,
     svg: `<svg width="100" height="60" viewBox="0 0 560 300"><defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a4828"/><stop offset="35%" stop-color="#5a6a3a"/><stop offset="70%" stop-color="#8a9a5a"/><stop offset="100%" stop-color="#c8d0a0"/></linearGradient><clipPath id="fc"><path d="M 20 150 C 20 110,30 82,50 64 C 70 48,100 38,140 32 C 180 26,230 24,278 26 C 326 28,370 34,406 46 C 440 58,462 74,476 92 C 490 110,494 130,492 150 C 490 170,484 192,468 208 C 452 224,428 236,396 244 C 364 252,324 256,278 256 C 232 256,186 252,150 244 C 114 236,84 222,62 204 C 40 186,20 190,20 150 Z"/></clipPath></defs><path d="M 20 150 C 20 110,30 82,50 64 C 70 48,100 38,140 32 C 180 26,230 24,278 26 C 326 28,370 34,406 46 C 440 58,462 74,476 92 C 490 110,494 130,492 150 C 490 170,484 192,468 208 C 452 224,428 236,396 244 C 364 252,324 256,278 256 C 232 256,186 252,150 244 C 114 236,84 222,62 204 C 40 186,20 190,20 150 Z" fill="url(#fg)"/><path d="M 20 150 C 20 190,40 186,62 204 C 84 222,114 236,150 244 C 186 252,232 256,278 256 C 232 257,180 256,140 248 C 96 238,58 220,36 200 C 22 186,18 170,20 150 Z" fill="#a8b878" opacity=".35"/><g clip-path="url(#fc)" opacity=".2"><ellipse cx="180" cy="80" rx="28" ry="18" fill="#2a3018"/><ellipse cx="260" cy="58" rx="32" ry="18" fill="#2a3018"/><ellipse cx="346" cy="64" rx="28" ry="18" fill="#2a3018"/><ellipse cx="420" cy="92" rx="24" ry="16" fill="#2a3018"/><ellipse cx="200" cy="130" rx="22" ry="14" fill="#2a3018"/><ellipse cx="300" cy="110" rx="26" ry="16" fill="#2a3018"/><ellipse cx="390" cy="130" rx="22" ry="14" fill="#2a3018"/><ellipse cx="240" cy="170" rx="20" ry="12" fill="#2a3018"/><ellipse cx="330" cy="165" rx="22" ry="13" fill="#2a3018"/></g><path d="M 50 64 C 60 38,80 22,120 14 C 80 28,56 46,50 64 Z" fill="#2a3018" opacity=".38"/><path d="M 406 46 C 440 40,480 52,492 80 C 480 58,450 46,406 46 Z" fill="#2a3018" opacity=".3"/><path d="M 492 150 L 530 100 L 530 200 Z" fill="#3a4828" opacity=".85"/><path d="M 492 145 L 532 96 L 520 150 Z" fill="#4a5830"/><path d="M 492 155 L 532 204 L 520 150 Z" fill="#4a5830"/><path d="M 52 80 C 44 96,38 120,40 150 Q 36 130,40 100 Z" fill="#4a5830" opacity=".7"/><circle cx="82" cy="74" r="17" fill="white"/><circle cx="82.5" cy="74.5" r="11" fill="#060a04"/><circle cx="77" cy="69" r="4" fill="white" opacity=".9"/><circle cx="82" cy="74" r="17" fill="none" stroke="#3a4828" stroke-width="1.5"/><circle cx="114" cy="58" r="13" fill="white"/><circle cx="114.5" cy="58.5" r="8.5" fill="#060a04"/><circle cx="110" cy="54" r="3" fill="white" opacity=".9"/><circle cx="114" cy="58" r="13" fill="none" stroke="#3a4828" stroke-width="1.5"/><path d="M 22 142 Q 16 150,22 158" stroke="#3a4828" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M 22 158 Q 16 162,20 166" stroke="#3a4828" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M 48 66 Q 36 96,36 150" fill="none" stroke="#3a4828" stroke-width="2" opacity=".3" stroke-linecap="round"/></svg>`,
   },
+  hairtail: {
+    name: '갈치', sz: '60~120cm', depth: '표층~200m', minSize: '18cm',
+    seasons: [6,7,8,9,10,11],
+    regions: ['south','jeju','west'],
+    spots: ['breakwater','boat'],
+    difficulty: 1,
+    bait: '갈치지그·생미끼(전어·고등어)',
+    method: 'lure',
+    where: '방파제 집어등 아래, 선상 야간낚시. 불빛에 모여드는 갈치 떼를 노려요.',
+    when: '해가 진 후 밤 12시까지가 황금타임. 집어등이 있는 방파제나 어선 야간출조.',
+    baitGuide: '<b>갈치지그</b> (은색 반짝이 루어, 1~2만원)가 가장 쉬워요. 또는 <b>전어·고등어 조각</b>을 바늘에 꿰어 사용. 낚시점에서 "갈치채비 주세요" 하면 됩니다.',
+    howGuide: '채비를 중층(5~20m)에 내리고 릴을 일정 속도로 천천히 감아올려요. 갈치는 위로 올라오는 먹이를 공격하는 습성이 있어요. 입질이 오면 강하게 챔질!',
+    tips: ['은색·금색 루어가 잘 먹혀요 — 갈치는 빛에 반응해요', '갈치 이빨이 정말 날카로워요! 반드시 집게(플라이어)로 다루세요'],
+    warn: '18cm 이하 방류. 갈치 이빨에 손 베이지 않도록 꼭 장갑 착용하세요!',
+    simType: 'lure',
+    simBait: `<svg width="44" height="14" viewBox="0 0 48 16"><path d="M2 8 Q16 2,34 8 Q40 4,42 8 Q40 12,34 8 Q16 14,2 8Z" fill="#c0c8d0" opacity=".9"/><circle cx="6" cy="7" r="2" fill="white"/><circle cx="6" cy="7" r="1" fill="#1e293b"/><path d="M42 8 L48 3 L48 13Z" fill="#8090a0"/></svg>`,
+    svg: `<svg width="100" height="60" viewBox="0 0 640 200"><defs><linearGradient id="htg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c0c8d0"/><stop offset="40%" stop-color="#d8e0e8"/><stop offset="100%" stop-color="#f0f4f8"/></linearGradient><clipPath id="htc"><path d="M 16 100 C 18 88,24 76,34 68 C 44 60,58 56,76 54 C 100 52,130 52,166 54 C 220 56,290 60,360 66 C 430 72,500 80,556 90 C 590 96,614 100,624 100 C 614 104,590 108,556 112 C 500 120,430 128,360 134 C 290 140,220 144,166 146 C 130 148,100 148,76 146 C 58 144,44 140,34 132 C 24 124,18 112,16 100 Z"/></clipPath></defs><path d="M 16 100 C 18 88,24 76,34 68 C 44 60,58 56,76 54 C 100 52,130 52,166 54 C 220 56,290 60,360 66 C 430 72,500 80,556 90 C 590 96,614 100,624 100 C 614 104,590 108,556 112 C 500 120,430 128,360 134 C 290 140,220 144,166 146 C 130 148,100 148,76 146 C 58 144,44 140,34 132 C 24 124,18 112,16 100 Z" fill="url(#htg)"/><path d="M 16 100 C 18 110,24 120,34 128 C 44 136,58 140,76 142 C 58 143,44 140,32 132 C 22 124,16 112,16 100 Z" fill="#e0e8f0" opacity=".5"/><g clip-path="url(#htc)" opacity=".15"><line x1="100" y1="40" x2="100" y2="160" stroke="#8090a0" stroke-width="3"/><line x1="180" y1="40" x2="180" y2="160" stroke="#8090a0" stroke-width="3"/><line x1="280" y1="46" x2="280" y2="154" stroke="#8090a0" stroke-width="3"/><line x1="380" y1="54" x2="380" y2="146" stroke="#8090a0" stroke-width="3"/><line x1="480" y1="66" x2="480" y2="134" stroke="#8090a0" stroke-width="2.5"/></g><path d="M 624 100 L 640 80 L 634 100 L 640 120 Z" fill="#90a0b0"/><path d="M 34 68 C 28 56,20 44,16 36 C 20 48,24 62,28 72 Z" fill="#90a0b0" opacity=".7"/><path d="M 34 132 C 28 144,20 156,16 164 C 20 152,24 138,28 128 Z" fill="#90a0b0" opacity=".7"/><circle cx="38" cy="88" r="10" fill="white"/><circle cx="38.5" cy="88.5" r="6.5" fill="#060808"/><circle cx="35" cy="85" r="2.5" fill="white" opacity=".9"/><circle cx="38" cy="88" r="10" fill="none" stroke="#8090a0" stroke-width="1.2"/><path d="M 18 96 Q 13 100,18 104" stroke="#8090a0" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  },
 };
 
 // ═══════════════════════════════════
@@ -547,18 +584,62 @@ const REGION_NAME = { west:'서해', south:'남해', east:'동해', jeju:'제주
 const SPOT_NAME = { breakwater:'방파제·항구', rock:'갯바위', boat:'배 낚시' };
 const monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
+let fishTab = 'now'; // 'now' | 'all'
+
+function setFishTab(tab) {
+  fishTab = tab;
+  const btnNow = document.getElementById('tab-now');
+  const btnAll = document.getElementById('tab-all');
+  if (tab === 'now') {
+    btnNow.style.background = 'white';
+    btnNow.style.color = '#2e86c1';
+    btnNow.style.border = 'none';
+    btnAll.style.background = 'transparent';
+    btnAll.style.color = 'rgba(255,255,255,.75)';
+    btnAll.style.border = '2px solid rgba(255,255,255,.3)';
+  } else {
+    btnAll.style.background = 'white';
+    btnAll.style.color = '#2e86c1';
+    btnAll.style.border = 'none';
+    btnNow.style.background = 'transparent';
+    btnNow.style.color = 'rgba(255,255,255,.75)';
+    btnNow.style.border = '2px solid rgba(255,255,255,.3)';
+  }
+  renderFishGrid();
+}
+
 function buildFishGrid() {
+  fishTab = 'now';
+  // 탭 초기화
+  setFishTab('now');
   document.getElementById('fish-title').textContent = '오늘 잡을 수 있는 물고기';
   document.getElementById('fish-sub').textContent =
     `${REGION_NAME[state.region]} · ${SPOT_NAME[state.spot]} · ${monthNames[month-1]}`;
-
   document.getElementById('cond-bar').innerHTML =
     `<div class="cond-chip">📍 ${REGION_NAME[state.region]}</div>` +
     `<div class="cond-chip">🏗 ${SPOT_NAME[state.spot]}</div>` +
     `<div class="cond-chip">📅 ${monthNames[month-1]}</div>`;
+  renderFishGrid();
+}
 
-  const list = getRecommended();
+function renderFishGrid() {
   const grid = document.getElementById('fish-grid');
+  const { region, spot } = state;
+
+  // 지금 탭: 현재 월+지역+장소 필터
+  // 전체 탭: 지역+장소만 필터 (시즌 외 포함)
+  const list = Object.entries(FISH)
+    .filter(([k,f]) => f.regions.includes(region) && f.spots.includes(spot))
+    .map(([k,f]) => {
+      const inSeason = f.seasons.includes(month);
+      return { key:k, ...f, inSeason };
+    })
+    .filter(f => fishTab === 'now' ? f.inSeason : true)
+    .sort((a,b) => {
+      // 시즌 어종 먼저, 그 다음 난이도순
+      if (a.inSeason !== b.inSeason) return a.inSeason ? -1 : 1;
+      return a.difficulty - b.difficulty;
+    });
 
   if (list.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted)">
@@ -570,19 +651,54 @@ function buildFishGrid() {
     return;
   }
 
+  // 시즌 달 이름 (최적 시즌 표시용)
+  const mnShort = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const seasonStr = f => {
+    if (!f.seasons || f.seasons.length === 0) return '';
+    const sorted = [...f.seasons].sort((a,b)=>a-b);
+    // 연속 구간으로 묶기
+    let ranges = [], start = sorted[0], prev = sorted[0];
+    for (let i=1; i<sorted.length; i++) {
+      if (sorted[i] !== prev+1) { ranges.push([start,prev]); start=sorted[i]; }
+      prev = sorted[i];
+    }
+    ranges.push([start,prev]);
+    return ranges.map(([s,e]) => s===e ? mnShort[s-1] : `${mnShort[s-1]}~${mnShort[e-1]}`).join(', ');
+  };
+
   grid.innerHTML = list.map((f,i) => {
     const stars = getStars(f);
     const starHtml = [1,2,3].map(n=>`<span class="star${n>stars?' off':''}">★</span>`).join('');
-    const isTop = i===0;
-    return `<div class="fish-card" onclick="openGuide('${f.key}')">
+    const isTop = i===0 && f.inSeason;
+    const outBadge = !f.inSeason
+      ? `<div style="position:absolute;inset:0;background:rgba(255,255,255,.72);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;z-index:5">
+           <div style="font-size:11px;font-weight:800;color:#6b8499">시즌 외</div>
+           <div style="font-size:10px;color:#94a3b8">제철: ${seasonStr(f)}</div>
+         </div>` : '';
+    const whenWhere = f.inSeason ? `
+      <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:6px">
+        <div style="font-size:9px;background:#eff6ff;color:#1d4ed8;padding:2px 6px;border-radius:10px;font-weight:700">⬇ ${f.depth}</div>
+        ${f.minSize ? `<div style="font-size:9px;background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:10px;font-weight:700">⚠ ${f.minSize}</div>` : ''}
+      </div>` : '';
+    return `<div class="fish-card" onclick="${f.inSeason ? `openGuide('${f.key}')` : `showOffSeason('${f.key}')`}" style="position:relative">
+      ${outBadge}
       ${isTop ? '<div class="rec-badge">추천</div>' : ''}
       <div class="f-svg">${f.svg}</div>
       <div class="f-name">${f.name}</div>
       <div class="f-sz">${f.sz}</div>
       <div class="star-row">${starHtml}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:6px">${['','쉬움 ✅','보통','고급'][f.difficulty]}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${['','쉬움 ✅','보통','고급'][f.difficulty]}</div>
+      ${whenWhere}
     </div>`;
   }).join('');
+}
+
+// 시즌 외 어종 클릭 시 안내
+function showOffSeason(key) {
+  const f = FISH[key];
+  const mnShort = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const sorted = [...f.seasons].sort((a,b)=>a-b);
+  alert(`${f.name}은 지금 시즌이 아니에요.\n제철: ${sorted.map(m=>mnShort[m-1]).join(', ')}\n\n전체 정보는 "전체 어종 보기" 탭에서 확인하거나,\n제철이 되면 이 탭에 나타납니다!`);
 }
 
 // ═══════════════════════════════════
